@@ -81,4 +81,4 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Model Pipeline")
     parser.add_argument('task', choices=['preprocess', 'train', 'all'], help="Specify the task: 'preprocess', 'train', or 'all'")
     args = parser.parse_args()
-    main(args)
+    main(args) #run  the pipeline
