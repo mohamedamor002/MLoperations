@@ -48,8 +48,19 @@ test:
 # Run the API and display Swagger UI URL
 run-api:
 	@echo "Starting API..."
-	${VENV}/bin/python app.py &
-	sleep 2
+	${VENV}/bin/uvicorn app:app --reload &
+	@echo "Waiting for the API to start..."
+	@sleep 2
 	@echo "API started. Open Swagger UI at: http://127.0.0.1:8000/docs"
 
-.PHONY: install lint prepare train all clean test run-api
+# Run the Flask application
+run-flask:
+	@echo "Starting Flask application..."
+	${VENV}/bin/python app_flask.py
+
+# Monitor changes and run make all
+monitor:
+	@echo "Starting file monitoring..."
+	./monitor_changes.sh
+
+.PHONY: install lint prepare train all clean test run-api run-flask monitor

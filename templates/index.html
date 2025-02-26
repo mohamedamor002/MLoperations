@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Churn Prediction</title>
+    <!-- Add Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Churn Prediction</h1>
+        <form method="POST" class="space-y-4">
+            <!-- Account Length -->
+            <div>
+                <label for="account_length" class="block text-sm font-medium text-gray-700">Account Length:</label>
+                <input type="number" step="0.1" name="account_length" required
+                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <!-- International Plan -->
+            <div>
+                <label for="international_plan" class="block text-sm font-medium text-gray-700">International Plan:</label>
+                <select name="international_plan" required
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+            </div>
+
+            <!-- Voice Mail Plan -->
+            <div>
+                <label for="voice_mail_plan" class="block text-sm font-medium text-gray-700">Voice Mail Plan:</label>
+                <select name="voice_mail_plan" required
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+            </div>
+
+            <!-- Number of Voicemail Messages -->
+            <div>
+                <label for="number_vmail_messages" class="block text-sm font-medium text-gray-700">Number of Voicemail Messages:</label>
+                <input type="number" name="number_vmail_messages" required
+                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <!-- Total Day Minutes -->
+            <div>
+                <label for="total_day_minutes" class="block text-sm font-medium text-gray-700">Total Day Minutes:</label>
+                <input type="number" step="0.1" name="total_day_minutes" required
+                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <!-- Total Day Calls -->
+            <div>
+                <label for="total_day_calls" class="block text-sm font-medium text-gray-700">Total Day Calls:</label>
+                <input type="number" name="total_day_calls" required
+                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <!-- Total Evening Minutes -->
+            <div>
+                <label for="total_eve_minutes" class="block text-sm font-medium text-gray-700">Total Evening Minutes:</label>
+                <input type="number" step="0.1" name="total_eve_minutes" required
+                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <!-- Total Evening Calls -->
+            <div>
+                <label for="total_eve_calls" class="block text-sm font-medium text-gray-700">Total Evening Calls:</label>
+                <input type="number" name="total_eve_calls" required
+                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <!-- Total Night Minutes -->
+            <div>
+                <label for="total_night_minutes" class="block text-sm font-medium text-gray-700">Total Night Minutes:</label>
+                <input type="number" step="0.1" name="total_night_minutes" required
+                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <!-- Total Night Calls -->
+            <div>
+                <label for="total_night_calls" class="block text-sm font-medium text-gray-700">Total Night Calls:</label>
+                <input type="number" name="total_night_calls" required
+                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <!-- Total International Minutes -->
+            <div>
+                <label for="total_intl_minutes" class="block text-sm font-medium text-gray-700">Total International Minutes:</label>
+                <input type="number" step="0.1" name="total_intl_minutes" required
+                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <!-- Total International Calls -->
+            <div>
+                <label for="total_intl_calls" class="block text-sm font-medium text-gray-700">Total International Calls:</label>
+                <input type="number" name="total_intl_calls" required
+                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <!-- Customer Service Calls -->
+            <div>
+                <label for="customer_service_calls" class="block text-sm font-medium text-gray-700">Customer Service Calls:</label>
+                <input type="number" name="customer_service_calls" required
+                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <!-- Submit Button -->
+            <div>
+                <button type="submit" class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    Predict
+                </button>
+            </div>
+        </form>
+
+        <!-- Prediction Result -->
+        {% if prediction is not none %}
+        <div class="mt-6 text-center">
+            <h2 class="text-xl font-semibold text-gray-800">
+                Prediction Result: {{ 'Churn' if prediction else 'Not Churn' }}
+            </h2>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
