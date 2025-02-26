@@ -9,6 +9,10 @@ PREPROCESSED_DATA=preprocessed_data.joblib
 DATA_FILE=/home/amor/ml_project/data.csv
 TARGET_COLUMN=Churn
 
+# Docker Variables
+DOCKER_IMAGE=mamor02/fastapi-mlflow-app
+DOCKER_TAG=latest
+
 # Create a virtual environment and install dependencies
 install:
 	@echo "Creating virtual environment..."
@@ -68,4 +72,26 @@ run-mlflow:
 	@echo "Starting MLflow UI..."
 	${VENV}/bin/mlflow ui --host 127.0.0.1 --port 5004
 
-.PHONY: install lint prepare train all clean test run-api run-flask monitor run-mlflow
+# Docker Commands
+
+# Build Docker image
+docker-build:
+	@echo "Building Docker image..."
+	docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .
+
+# Run Docker container
+docker-run:
+	@echo "Running Docker container..."
+	docker run -p 8080:8000 fastapi-mlflow-app
+
+# Push Docker image to Docker Hub
+docker-push:
+	@echo "Pushing Docker image to Docker Hub..."
+	docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
+
+# Clean Docker images and containers
+docker-clean:
+	@echo "Cleaning up Docker images and containers..."
+	docker system prune -f
+
+.PHONY: install lint prepare train all clean test run-api run-flask monitor run-mlflow docker-build docker-run docker-push docker-clean
