@@ -5,6 +5,9 @@ from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, classification_report
 import joblib
 import argparse
+import mlflow
+import mlflow.sklearn
+from mlflow.models.signature import infer_signature
 
 def load_data(file_path):
     df = pd.read_csv(file_path)
@@ -30,7 +33,6 @@ def preprocess_data(df, target_column):
     
     return X, y, scaler
 
-
 def train_model(X, y):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     
@@ -53,6 +55,7 @@ def save_model(model, scaler, model_path='trained_model.joblib', scaler_path='sc
     print(f"Scaler saved to {scaler_path}")
 
 def main(args):
+    mlflow.set_tracking_uri("http://localhost:5004")  # Add this line
     file_path = "data.csv"
     target_column = "Churn"
     
@@ -71,6 +74,19 @@ def main(args):
         except FileNotFoundError:
             print("Error: Preprocessed data not found. Run preprocessing first.")
             return
+        with mlflow.start_run():
+            model, accuracy, report, X_test = train_model(X, y)
+            
+            mlflow.log_param("kernel", "rbf")
+            mlflow.log_param("random_state", 42)
+            mlflow.log_metric("accuracy", accuracy)
+            
+            # Infer signature and log model properly
+            signature = infer_signature(X_test, model.predict(X_test))
+            mlflow.sklearn.log_model(model, "model", signature=signature, input_example=X_test.iloc[:5])
+            
+            save_model(model, scaler)
+        print("Model training completed.")
         
         print("Training the model...")
         model, accuracy, report, X_test = train_model(X, y)
@@ -81,4 +97,4 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Model Pipeline")
     parser.add_argument('task', choices=['preprocess', 'train', 'all'], help="Specify the task: 'preprocess', 'train', or 'all'")
     args = parser.parse_args()
-    main(args) #run  the pipeline
+    main(args)

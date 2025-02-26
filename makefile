@@ -63,4 +63,9 @@ monitor:
 	@echo "Starting file monitoring..."
 	./monitor_changes.sh
 
-.PHONY: install lint prepare train all clean test run-api run-flask monitor
+# Run MLflow UI
+run-mlflow:
+	@echo "Starting MLflow UI..."
+	${VENV}/bin/mlflow ui --host 127.0.0.1 --port 5004
+
+.PHONY: install lint prepare train all clean test run-api run-flask monitor run-mlflow
