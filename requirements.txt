@@ -8,3 +8,5 @@ fastapi
 uvicorn
 joblib
 pytest
+black
+flake8
