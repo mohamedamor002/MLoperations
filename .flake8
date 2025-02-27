@@ -1,0 +1,4 @@
+[flake8]
+exclude = venv/
+max-line-length = 88  # Match Black's default line length
+ignore = E265, E402   # Ignore specific rules if needed

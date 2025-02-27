@@ -1,14 +1,16 @@
-import sys
 import os
-import pytest
-import pandas as pd
+import sys
+
 import joblib
+import pandas as pd
+import pytest
 
 # Add the project root directory to the Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Import functions from model_pipeline
 from model_pipeline import load_data, preprocess_data, train_model
+
 
 # Fixture to load data once and reuse in multiple tests
 @pytest.fixture

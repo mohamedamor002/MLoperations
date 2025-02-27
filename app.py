@@ -1,9 +1,10 @@
-from fastapi import FastAPI, HTTPException
+import logging
+import subprocess
+
 import joblib
 import numpy as np
-import subprocess
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-import logging
 
 # Configure logging
 logging.basicConfig(
@@ -28,10 +29,14 @@ except Exception as e:
 app = FastAPI()
 
 # Define request body for prediction
+
+
 class PredictionInput(BaseModel):
     account_length: float
-    international_plan: str  # Assuming this is a categorical variable (e.g., "yes" or "no")
-    voice_mail_plan: str    # Assuming this is a categorical variable (e.g., "yes" or "no")
+    # Assuming this is a categorical variable (e.g., "yes" or "no")
+    international_plan: str
+    # Assuming this is a categorical variable (e.g., "yes" or "no")
+    voice_mail_plan: str
     number_vmail_messages: int
     total_day_minutes: float
     total_day_calls: int
@@ -44,6 +49,8 @@ class PredictionInput(BaseModel):
     customer_service_calls: int
 
 # Define request body for retraining
+
+
 class RetrainParams(BaseModel):
     file_path: str
     target_column: str
@@ -52,6 +59,8 @@ class RetrainParams(BaseModel):
     kernel: str = 'rbf'
 
 # Define prediction endpoint
+
+
 @app.post("/predict")
 async def predict(input_data: PredictionInput):
     try:
@@ -71,7 +80,7 @@ async def predict(input_data: PredictionInput):
             input_data.total_intl_calls,
             input_data.customer_service_calls
         ]).reshape(1, -1)
-        
+
         # Make prediction
         prediction = model.predict(input_array)
         logging.info(f"Prediction successful: {prediction}")
@@ -81,17 +90,19 @@ async def predict(input_data: PredictionInput):
         raise HTTPException(status_code=400, detail=str(e))
 
 # Define retrain endpoint
+
+
 @app.post("/retrain")
 def retrain_model(params: RetrainParams):
     try:
         # Execute the training script with new hyperparameters
         subprocess.run(
-            ["python", "model_pipeline.py", "train", 
-             "--file_path", params.file_path, 
-             "--target_column", params.target_column, 
-             "--test_size", str(params.test_size), 
-             "--random_state", str(params.random_state), 
-             "--kernel", params.kernel], 
+            ["python", "model_pipeline.py", "train",
+             "--file_path", params.file_path,
+             "--target_column", params.target_column,
+             "--test_size", str(params.test_size),
+             "--random_state", str(params.random_state),
+             "--kernel", params.kernel],
             check=True
         )
         logging.info("Model retrained successfully.")
