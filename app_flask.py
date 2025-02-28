@@ -25,7 +25,7 @@ def index():
             "total_night_calls": int(request.form["total_night_calls"]),
             "total_intl_minutes": float(request.form["total_intl_minutes"]),
             "total_intl_calls": int(request.form["total_intl_calls"]),
-            "customer_service_calls": int(request.form["customer_service_calls"])
+            "customer_service_calls": int(request.form["customer_service_calls"]),
         }
 
         # Envoyer les données à l'API FastAPI
