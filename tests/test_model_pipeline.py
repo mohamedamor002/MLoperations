@@ -14,7 +14,7 @@ from model_pipeline import load_data, preprocess_data, train_model
 # Fixture to load data once and reuse in multiple tests
 @pytest.fixture
 def sample_data():
-    file_path = "/home/amor/ml_project/churn-bigml-80.csv"  # Update with your actual file path
+    file_path = "../data.csv"  # Update with your actual file path
     return load_data(file_path)
 
 # Test data loading

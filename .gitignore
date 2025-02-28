@@ -6,6 +6,9 @@ __pycache__/
 
 # Ignore virtual environment
 test/
+venv/
+mlartifacts/
+mlruns/
 
 # Ignore specific files
 app.cpython-312.pyc
