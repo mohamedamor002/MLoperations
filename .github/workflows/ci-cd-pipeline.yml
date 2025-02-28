@@ -108,6 +108,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: train
     steps:
-      - name: Send notification
+      - name: Send email notification via Mailgun
         run: |
-          echo "Pipeline execution completed successfully!"
+          curl -s --user "api:${{ secrets.MAILGUN_API_KEY }}" \
+            https://api.mailgun.net/v3/sandboxb965d5926a48416bb72e1e4c8d03d7ef.mailgun.org/messages \
+            -F from='Mailgun Sandbox <postmaster@sandboxb965d5926a48416bb72e1e4c8d03d7ef.mailgun.org>' \
+            -F to='amor mohamed <mohamed.amor@esprit.tn>' \
+            -F subject='Pipeline Execution Completed' \
+            -F text='Pipeline execution completed successfully!'
