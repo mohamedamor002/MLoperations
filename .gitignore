@@ -18,3 +18,4 @@ app.cpython-312.pyc
 *.joblib
 *.env
 *.DS_Store
+*.db

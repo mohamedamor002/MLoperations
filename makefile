@@ -13,6 +13,10 @@ TARGET_COLUMN=Churn
 DOCKER_IMAGE=mamor02/fastapi-mlflow-app
 DOCKER_TAG=latest
 
+# MLflow Variables
+MLFLOW_TRACKING_URI=sqlite:///mlflow.db
+MLFLOW_ARTIFACT_LOCATION=./mlruns
+
 # Create a virtual environment and install dependencies
 install:
 	@echo "Creating virtual environment..."
@@ -70,7 +74,7 @@ monitor:
 # Run MLflow UI
 run-mlflow:
 	@echo "Starting MLflow UI..."
-	${VENV}/bin/mlflow ui --host 127.0.0.1 --port 5004
+	${VENV}/bin/mlflow ui --backend-store-uri ${MLFLOW_TRACKING_URI} --host 0.0.0.0 --port 5006 --default-artifact-root ${MLFLOW_ARTIFACT_LOCATION}
 
 # Docker Commands
 
@@ -94,4 +98,4 @@ docker-clean:
 	@echo "Cleaning up Docker images and containers..."
 	docker system prune -f
 
-.PHONY: install lint prepare train all clean test run-api run-flask monitor run-mlflow docker-build docker-run docker-push docker-clean
+.PHONY: install lint prepare train all clean test run-api run-fl

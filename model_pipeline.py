@@ -1,5 +1,4 @@
 import argparse
-
 import joblib
 import mlflow
 import mlflow.sklearn
@@ -9,12 +8,11 @@ from sklearn.metrics import accuracy_score, classification_report
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.svm import SVC
-
+import os
 
 def load_data(file_path):
     df = pd.read_csv(file_path)
     return df
-
 
 def preprocess_data(df, target_column):
     df = df.drop(
@@ -47,7 +45,6 @@ def preprocess_data(df, target_column):
 
     return X, y, scaler
 
-
 def train_model(X, y):
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
@@ -65,7 +62,6 @@ def train_model(X, y):
 
     return model, accuracy, report, X_test
 
-
 def save_model(
     model, scaler, model_path="trained_model.joblib", scaler_path="scaler.joblib"
 ):
@@ -74,9 +70,11 @@ def save_model(
     print(f"Model saved to {model_path}")
     print(f"Scaler saved to {scaler_path}")
 
-
 def main(args):
-    mlflow.set_tracking_uri("http://localhost:5004")  # Add this line
+    # Set the MLflow tracking URI and artifact location
+    mlflow.set_tracking_uri("sqlite:///mlflow.db")
+    mlflow.set_experiment("Churn Prediction")
+
     file_path = "data.csv"
     target_column = "Churn"
 
@@ -110,12 +108,6 @@ def main(args):
 
             save_model(model, scaler)
         print("Model training completed.")
-
-        print("Training the model...")
-        model, accuracy, report, X_test = train_model(X, y)
-        save_model(model, scaler)
-        print("Model training completed.")
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Model Pipeline")
