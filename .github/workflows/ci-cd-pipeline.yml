@@ -111,8 +111,8 @@ jobs:
       - name: Send email notification via Mailgun
         run: |
           curl -s --user "api:${{ secrets.MAILGUN_API_KEY }}" \
-            https://api.mailgun.net/v3/sandboxb965d5926a48416bb72e1e4c8d03d7ef.mailgun.org/messages \
-            -F from='Mailgun Sandbox <postmaster@sandboxb965d5926a48416bb72e1e4c8d03d7ef.mailgun.org>' \
-            -F to='amor mohamed <mohamed.amor@esprit.tn>' \
+            https://api.mailgun.net/v3/sandboxc2aa251d00304af9aba6da6c6b215948.mailgun.org/messages \
+            -F from='Mailgun Sandbox <postmaster@sandboxc2aa251d00304af9aba6da6c6b215948.mailgun.org>' \
+            -F to='mohamed amor <mohamedamor02@gmail.com>' \
             -F subject='Pipeline Execution Completed' \
             -F text='Pipeline execution completed successfully!'
