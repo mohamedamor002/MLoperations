@@ -8,7 +8,6 @@ from sklearn.metrics import accuracy_score, classification_report
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.svm import SVC
-import os
 
 def load_data(file_path):
     df = pd.read_csv(file_path)
