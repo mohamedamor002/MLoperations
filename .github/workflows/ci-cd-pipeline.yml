@@ -8,9 +8,21 @@ on:
     branches:
       - main  # Trigger the pipeline on pull requests to the main branch
 
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
 jobs:
   lint:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Grant write access
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -29,10 +41,10 @@ jobs:
       - name: Lint code
         run: |
           source venv/bin/activate
-          black .  # This will format the code
-          flake8 .
+          black .  # Format code
+          flake8 .  # Lint code
 
-      - name: Commit formatted code
+      - name: Commit and push changes
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
