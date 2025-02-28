@@ -113,6 +113,6 @@ jobs:
           curl -s --user "api:${{ secrets.MAILGUN_API_KEY }}" \
             https://api.mailgun.net/v3/sandboxc2aa251d00304af9aba6da6c6b215948.mailgun.org/messages \
             -F from='Mailgun Sandbox <postmaster@sandboxc2aa251d00304af9aba6da6c6b215948.mailgun.org>' \
-            -F to='mohamed amor <mohamedamor02@gmail.com>' \
+            -F to='mohamed amor <mohamed.amor@esprit.tn>' \
             -F subject='Pipeline Execution Completed' \
             -F text='Pipeline execution completed successfully!'
