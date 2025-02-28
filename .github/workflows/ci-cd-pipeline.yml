@@ -11,8 +11,6 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -57,36 +55,9 @@ jobs:
           source venv/bin/activate
           pytest tests/
 
-  start_servers:
-    runs-on: ubuntu-latest
-    needs: test
-    services:
-      mlflow:
-        image: mlflow/mlflow:latest
-        ports:
-          - 5004:5000
-        options: --env MLFLOW_TRACKING_URI=http://localhost:5000
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Wait for MLflow server to start
-        run: |
-          until curl -s http://localhost:5004/api/2.0/mlflow/health > /dev/null; do
-            echo "Waiting for MLflow server to start..."
-            sleep 5
-          done
-          echo "MLflow server is up and running!"
-
-      - name: Start FastAPI server
-        run: |
-          source venv/bin/activate
-          uvicorn fastapi_app:app --host 0.0.0.0 --port 8000 &
-          echo "FastAPI server started on port 8000"
-
   train:
     runs-on: ubuntu-latest
-    needs: start_servers
+    needs: test
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -102,6 +73,26 @@ jobs:
           source venv/bin/activate
           pip install -r requirements.txt
 
+      - name: Start MLflow server
+        run: |
+          source venv/bin/activate
+          mlflow server --host 0.0.0.0 --port 5000 &
+          echo "MLflow server started on port 5000"
+
+      - name: Wait for MLflow server to start
+        run: |
+          until curl -s http://localhost:5000/api/2.0/mlflow/health > /dev/null; do
+            echo "Waiting for MLflow server to start..."
+            sleep 5
+          done
+          echo "MLflow server is up and running!"
+
+      - name: Start FastAPI server
+        run: |
+          source venv/bin/activate
+          uvicorn fastapi_app:app --host 0.0.0.0 --port 8000 &
+          echo "FastAPI server started on port 8000"
+
       - name: Preprocess data
         run: |
           source venv/bin/activate
@@ -110,7 +101,7 @@ jobs:
       - name: Train model
         run: |
           source venv/bin/activate
-          export MLFLOW_TRACKING_URI=http://localhost:5004
+          export MLFLOW_TRACKING_URI=http://localhost:5000
           python model_pipeline.py train
 
   notify:
