@@ -3,16 +3,16 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main  # Trigger the pipeline on push to the main branch
+      - main
   pull_request:
     branches:
-      - main  # Trigger the pipeline on pull requests to the main branch
+      - main
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # Grant write access
+      contents: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -33,14 +33,6 @@ jobs:
           source venv/bin/activate
           black .  # Format code
           flake8 .  # Lint code
-
-      - name: Commit and push changes
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "Automatically formatted code with Black" || echo "No changes to commit"
-          git push
 
   test:
     runs-on: ubuntu-latest
@@ -65,9 +57,43 @@ jobs:
           source venv/bin/activate
           pytest tests/
 
-  train:
+  start_servers:
     runs-on: ubuntu-latest
     needs: test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
+
+      - name: Start MLflow server
+        run: |
+          source venv/bin/activate
+          mlflow server --host 0.0.0.0 --port 5004 &
+          echo "MLflow server started on port 5004"
+
+      - name: Start FastAPI server
+        run: |
+          source venv/bin/activate
+          uvicorn fastapi_app:app --host 0.0.0.0 --port 8000 &
+          echo "FastAPI server started on port 8000"
+
+      - name: Wait for servers to start
+        run: |
+          sleep 10  # Wait for servers to start (adjust as needed)
+
+  train:
+    runs-on: ubuntu-latest
+    needs: start_servers
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -100,4 +126,3 @@ jobs:
       - name: Send notification
         run: |
           echo "Pipeline execution completed successfully!"
-        # You can add email notification logic here using tools like `sendmail` or third-party services.
