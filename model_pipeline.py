@@ -8,12 +8,35 @@ from sklearn.metrics import accuracy_score, classification_report
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.svm import SVC
+from elasticsearch import Elasticsearch
+import datetime
+
+# Connect to Elasticsearch
+es = Elasticsearch("http://localhost:9200", timeout=30, max_retries=10, retry_on_timeout=True)
+
+def log_to_elasticsearch(run_id, accuracy, report):
+    """
+    Logs the model's accuracy and classification report to Elasticsearch.
+    """
+    doc = {
+        "run_id": run_id,
+        "accuracy": accuracy,
+        "report": report,
+        "timestamp": datetime.datetime.now()
+    }
+    es.index(index="mlflow-metrics", body=doc)
 
 def load_data(file_path):
+    """
+    Load data from a CSV file.
+    """
     df = pd.read_csv(file_path)
     return df
 
 def preprocess_data(df, target_column):
+    """
+    Preprocess the data by dropping unnecessary columns, encoding categorical features, and scaling numerical features.
+    """
     df = df.drop(
         columns=[
             "State",
@@ -45,6 +68,9 @@ def preprocess_data(df, target_column):
     return X, y, scaler
 
 def train_model(X, y):
+    """
+    Train a Support Vector Machine (SVM) model and evaluate its performance.
+    """
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
     )
@@ -64,12 +90,18 @@ def train_model(X, y):
 def save_model(
     model, scaler, model_path="trained_model.joblib", scaler_path="scaler.joblib"
 ):
+    """
+    Save the trained model and scaler to disk.
+    """
     joblib.dump(model, model_path)
     joblib.dump(scaler, scaler_path)
     print(f"Model saved to {model_path}")
     print(f"Scaler saved to {scaler_path}")
 
 def main(args):
+    """
+    Main function to preprocess data, train the model, and log metrics to MLflow and Elasticsearch.
+    """
     # Set the MLflow tracking URI and artifact location
     mlflow.set_tracking_uri("sqlite:///mlflow.db")
     mlflow.set_experiment("Churn Prediction")
@@ -92,7 +124,7 @@ def main(args):
         except FileNotFoundError:
             print("Error: Preprocessed data not found. Run preprocessing first.")
             return
-        with mlflow.start_run():
+        with mlflow.start_run() as run:
             model, accuracy, report, X_test = train_model(X, y)
 
             mlflow.log_param("kernel", "rbf")
@@ -106,6 +138,9 @@ def main(args):
             )
 
             save_model(model, scaler)
+
+            # Log to Elasticsearch
+            log_to_elasticsearch(run.info.run_id, accuracy, report)
         print("Model training completed.")
 
 if __name__ == "__main__":

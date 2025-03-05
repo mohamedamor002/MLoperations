@@ -1,4 +1,3 @@
-numpy
 pandas
 scikit-learn
 matplotlib
@@ -10,3 +9,5 @@ joblib
 pytest
 black
 flake8
+elasticsearch==7.10.1
+numpy<2.0

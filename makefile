@@ -86,7 +86,7 @@ docker-build:
 # Run Docker container
 docker-run:
 	@echo "Running Docker container..."
-	docker run -p 8080:8000 fastapi-mlflow-app
+	docker run -p 8080:8000 ${DOCKER_IMAGE}:${DOCKER_TAG} 
 
 # Push Docker image to Docker Hub
 docker-push:
