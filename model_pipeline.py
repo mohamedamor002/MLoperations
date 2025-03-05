@@ -12,7 +12,10 @@ from elasticsearch import Elasticsearch
 import datetime
 
 # Connect to Elasticsearch
-es = Elasticsearch("http://localhost:9200", timeout=30, max_retries=10, retry_on_timeout=True)
+es = Elasticsearch(
+    "http://localhost:9200", timeout=30, max_retries=10, retry_on_timeout=True
+)
+
 
 def log_to_elasticsearch(run_id, accuracy, report):
     """
@@ -22,9 +25,10 @@ def log_to_elasticsearch(run_id, accuracy, report):
         "run_id": run_id,
         "accuracy": accuracy,
         "report": report,
-        "timestamp": datetime.datetime.now()
+        "timestamp": datetime.datetime.now(),
     }
     es.index(index="mlflow-metrics", body=doc)
+
 
 def load_data(file_path):
     """
@@ -32,6 +36,7 @@ def load_data(file_path):
     """
     df = pd.read_csv(file_path)
     return df
+
 
 def preprocess_data(df, target_column):
     """
@@ -67,6 +72,7 @@ def preprocess_data(df, target_column):
 
     return X, y, scaler
 
+
 def train_model(X, y):
     """
     Train a Support Vector Machine (SVM) model and evaluate its performance.
@@ -87,6 +93,7 @@ def train_model(X, y):
 
     return model, accuracy, report, X_test
 
+
 def save_model(
     model, scaler, model_path="trained_model.joblib", scaler_path="scaler.joblib"
 ):
@@ -97,6 +104,7 @@ def save_model(
     joblib.dump(scaler, scaler_path)
     print(f"Model saved to {model_path}")
     print(f"Scaler saved to {scaler_path}")
+
 
 def main(args):
     """
@@ -142,6 +150,7 @@ def main(args):
             # Log to Elasticsearch
             log_to_elasticsearch(run.info.run_id, accuracy, report)
         print("Model training completed.")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Model Pipeline")

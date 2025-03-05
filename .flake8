@@ -1,6 +1,6 @@
 [flake8]
 # Match Black's default line length
-max-line-length = 88
+max-line-length = 150
 
 # Exclude the venv directory
 exclude = venv/
