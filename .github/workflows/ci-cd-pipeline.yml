@@ -108,19 +108,19 @@ jobs:
       - name: Preprocess data
         run: |
           source venv/bin/activate
-          python model_pipeline.py preprocess
+          python model_pipeline.py preprocess --file_path data.csv --target_column Churn
 
       - name: Train model
         run: |
           source venv/bin/activate
           export MLFLOW_TRACKING_URI=http://localhost:5000
-          python model_pipeline.py train
+          python model_pipeline.py train --file_path data.csv --target_column Churn
 
       - name: Test model
         run: |
           source venv/bin/activate
           export MLFLOW_TRACKING_URI=http://localhost:5000
-          python model_pipeline.py test
+          python model_pipeline.py test --file_path testData.csv --target_column Churn
 
       - name: Stop Elasticsearch and Kibana
         run: |
