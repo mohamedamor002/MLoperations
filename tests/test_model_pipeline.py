@@ -54,11 +54,17 @@ def test_train_model(sample_data):
     X, y, scaler = preprocess_data(sample_data, target_column)
 
     # Train the model
-    model, accuracy, report, X_test = train_model(X, y)  # Unpack four values
+    model, accuracy, precision, recall, f1, report, X_test = train_model(X, y)  # Unpack 7 values
 
     # Check that the model is trained
     assert hasattr(model, "fit"), "Model is not trained"
     assert isinstance(accuracy, float), "Accuracy is not a float"
     assert accuracy >= 0 and accuracy <= 1, "Accuracy is out of valid range (0-1)"
+    assert isinstance(precision, float), "Precision is not a float"
+    assert precision >= 0 and precision <= 1, "Precision is out of valid range (0-1)"
+    assert isinstance(recall, float), "Recall is not a float"
+    assert recall >= 0 and recall <= 1, "Recall is out of valid range (0-1)"
+    assert isinstance(f1, float), "F1-score is not a float"
+    assert f1 >= 0 and f1 <= 1, "F1-score is out of valid range (0-1)"
     assert isinstance(report, str), "Classification report is not a string"
     assert isinstance(X_test, pd.DataFrame), "X_test is not a DataFrame"
