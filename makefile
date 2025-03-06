@@ -18,6 +18,31 @@ DOCKER_TAG=latest
 MLFLOW_TRACKING_URI=sqlite:///mlflow.db
 MLFLOW_ARTIFACT_LOCATION=./mlruns
 
+# Help message
+help:
+	@echo "Usage: make <target>"
+	@echo ""
+	@echo "Targets:"
+	@echo "  install         Create a virtual environment and install dependencies."
+	@echo "  lint            Format and lint the code using Black and Flake8."
+	@echo "  prepare         Preprocess the data for training."
+	@echo "  train           Train the model using the preprocessed data."
+	@echo "  test            Test the model on the test dataset."
+	@echo "  all             Run all steps: prepare, train, and test."
+	@echo "  clean           Clean up generated files (e.g., trained models, scalers)."
+	@echo "  unit-test       Run unit tests."
+	@echo "  run-api         Start the FastAPI server and display Swagger UI URL."
+	@echo "  run-flask       Start the Flask application."
+	@echo "  monitor         Monitor file changes and run 'make all' automatically."
+	@echo "  run-mlflow      Start the MLflow UI for tracking experiments."
+	@echo "  docker-build    Build the Docker image."
+	@echo "  docker-run      Run the Docker container."
+	@echo "  docker-push     Push the Docker image to Docker Hub."
+	@echo "  docker-clean    Clean up Docker images and containers."
+	@echo "  docker-up       Start Docker Compose services (e.g., Elasticsearch, Kibana)."
+	@echo "  docker-down     Stop Docker Compose services."
+	@echo "  help            Display this help message."
+
 # Create a virtual environment and install dependencies
 install:
 	@echo "Creating virtual environment..."
@@ -104,4 +129,14 @@ docker-clean:
 	@echo "Cleaning up Docker images and containers..."
 	docker system prune -f
 
-.PHONY: install lint prepare train test all clean unit-test run-api run-flask monitor run-mlflow docker-build docker-run docker-push docker-clean
+# Start Docker Compose services
+docker-up:
+	@echo "Starting Docker Compose services (Elasticsearch, Kibana)..."
+	docker-compose up -d
+
+# Stop Docker Compose services
+docker-down:
+	@echo "Stopping Docker Compose services..."
+	docker-compose down
+
+.PHONY: install lint prepare train test all clean unit-test run-api run-flask monitor run-mlflow docker-build docker-run docker-push docker-clean docker-up docker-down help
