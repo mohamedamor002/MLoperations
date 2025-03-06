@@ -72,15 +72,15 @@ def preprocess_data(df, target_column):
     return X, y, scaler
 
 
-def train_model(X, y):
+def train_model(X, y, kernel='rbf', random_state=42):
     """
     Train a Support Vector Machine (SVM) model and evaluate its performance.
     """
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42
+        X, y, test_size=0.2, random_state=random_state
     )
 
-    model = SVC(kernel="rbf")
+    model = SVC(kernel=kernel)
     model.fit(X_train, y_train)
 
     y_pred = model.predict(X_test)
@@ -176,9 +176,12 @@ def main(args):
     mlflow.set_tracking_uri("sqlite:///mlflow.db")
     mlflow.set_experiment("Churn Prediction")
 
-    file_path = "data.csv"
+    file_path = args.file_path
     test_file_path = "testData.csv"
-    target_column = "Churn"
+    target_column = args.target_column
+    test_size = args.test_size
+    random_state = args.random_state
+    kernel = args.kernel
 
     if args.task in ["preprocess", "all"]:
         print("Loading and preprocessing data...")
@@ -196,11 +199,13 @@ def main(args):
             print("Error: Preprocessed data not found. Run preprocessing first.")
             return
         with mlflow.start_run() as run:
-            model, accuracy, precision, recall, f1, report, X_test = train_model(X, y)
+            model, accuracy, precision, recall, f1, report, X_test = train_model(
+                X, y, kernel=kernel, random_state=random_state
+            )
 
             # Log parameters and metrics to MLflow
-            mlflow.log_param("kernel", "rbf")
-            mlflow.log_param("random_state", 42)
+            mlflow.log_param("kernel", kernel)
+            mlflow.log_param("random_state", random_state)
             mlflow.log_metric("accuracy", accuracy)
             mlflow.log_metric("precision", precision)
             mlflow.log_metric("recall", recall)
@@ -261,5 +266,10 @@ if __name__ == "__main__":
         choices=["preprocess", "train", "test", "all"],
         help="Specify the task: 'preprocess', 'train', 'test', or 'all'",
     )
+    parser.add_argument("--file_path", type=str, required=True, help="Path to the data file")
+    parser.add_argument("--target_column", type=str, required=True, help="Name of the target column")
+    parser.add_argument("--test_size", type=float, default=0.2, help="Size of the test set")
+    parser.add_argument("--random_state", type=int, default=42, help="Random seed for reproducibility")
+    parser.add_argument("--kernel", type=str, default="rbf", help="Kernel type for SVM")
     args = parser.parse_args()
     main(args)
