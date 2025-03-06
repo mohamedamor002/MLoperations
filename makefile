@@ -7,6 +7,7 @@ TRAINED_MODEL=trained_model.joblib
 SCALER=scaler.joblib
 PREPROCESSED_DATA=preprocessed_data.joblib
 DATA_FILE=/home/amor/ml_project/data.csv
+TEST_DATA_FILE=/home/amor/ml_project/testData.csv
 TARGET_COLUMN=Churn
 
 # Docker Variables
@@ -40,8 +41,13 @@ train:
 	@echo "Training the model..."
 	${VENV}/bin/python model_pipeline.py train
 
-# Run both prepare and train
-all: prepare train
+# Test the model on test data
+test:
+	@echo "Testing the model..."
+	${VENV}/bin/python model_pipeline.py test
+
+# Run both prepare, train, and test
+all: prepare train test
 
 # Clean generated files
 clean:
@@ -49,8 +55,8 @@ clean:
 	rm -f ${TRAINED_MODEL} ${SCALER} ${PREPROCESSED_DATA}
 
 # Run tests (if applicable)
-test:
-	@echo "Running tests..."
+unit-test:
+	@echo "Running unit tests..."
 	${VENV}/bin/pytest tests/
 
 # Run the API and display Swagger UI URL
@@ -98,4 +104,4 @@ docker-clean:
 	@echo "Cleaning up Docker images and containers..."
 	docker system prune -f
 
-.PHONY: install lint prepare train all clean test run-api run-fl
+.PHONY: install lint prepare train test all clean unit-test run-api run-flask monitor run-mlflow docker-build docker-run docker-push docker-clean

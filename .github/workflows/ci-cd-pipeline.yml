@@ -116,6 +116,12 @@ jobs:
           export MLFLOW_TRACKING_URI=http://localhost:5000
           python model_pipeline.py train
 
+      - name: Test model
+        run: |
+          source venv/bin/activate
+          export MLFLOW_TRACKING_URI=http://localhost:5000
+          python model_pipeline.py test
+
       - name: Stop Elasticsearch and Kibana
         run: |
           docker-compose down
