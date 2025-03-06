@@ -179,7 +179,6 @@ def main(args):
     file_path = args.file_path
     test_file_path = "testData.csv"
     target_column = args.target_column
-    test_size = args.test_size
     random_state = args.random_state
     kernel = args.kernel
 

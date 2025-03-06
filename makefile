@@ -6,8 +6,8 @@ REQ=requirements.txt
 TRAINED_MODEL=trained_model.joblib
 SCALER=scaler.joblib
 PREPROCESSED_DATA=preprocessed_data.joblib
-DATA_FILE=/home/amor/ml_project/data.csv
-TEST_DATA_FILE=/home/amor/ml_project/testData.csv
+DATA_FILE=data.csv
+TEST_DATA_FILE=testData.csv
 TARGET_COLUMN=Churn
 
 # Docker Variables
@@ -34,17 +34,17 @@ lint:
 # Prepare the data
 prepare:
 	@echo "Preprocessing data..."
-	${VENV}/bin/python model_pipeline.py preprocess
+	${VENV}/bin/python model_pipeline.py preprocess --file_path ${DATA_FILE} --target_column ${TARGET_COLUMN}
 
 # Train the model
 train:
 	@echo "Training the model..."
-	${VENV}/bin/python model_pipeline.py train
+	${VENV}/bin/python model_pipeline.py train --file_path ${DATA_FILE} --target_column ${TARGET_COLUMN}
 
 # Test the model on test data
 test:
 	@echo "Testing the model..."
-	${VENV}/bin/python model_pipeline.py test
+	${VENV}/bin/python model_pipeline.py test --file_path ${TEST_DATA_FILE} --target_column ${TARGET_COLUMN}
 
 # Run both prepare, train, and test
 all: prepare train test
