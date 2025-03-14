@@ -21,7 +21,6 @@ This project demonstrates a machine learning pipeline for training, monitoring, 
 6. [API Documentation](#api-documentation)
 7. [Monitoring and Visualization](#monitoring-and-visualization)
 8. [Docker Commands](#docker-commands)
-9. [License](#license)
 
 ---
 
